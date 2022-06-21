@@ -30,7 +30,7 @@ class SwipeRequest extends FormRequest
             ],
             'user_swipe_id' => [
                 'required',
-                'exists:user,id'        
+                'exists:users,id'        
             ]
         ];
     }
