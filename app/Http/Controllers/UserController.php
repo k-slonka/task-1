@@ -5,6 +5,8 @@ use App\Models\User;
 use App\Models\Swipe;
 use App\Models\Pair;
 use App\Http\Requests\SwipeRequest;
+
+
 class UserController extends Controller
 {
     /**
@@ -13,7 +15,7 @@ class UserController extends Controller
     function swipe(SwipeRequest $request, User $user){
         $user->swipes()->updateOrCreate(
             [
-                'user_swipe_id' => $request->user_id
+                'user_swipe_id' => $request->user_swipe_id
             ],
             [
                 'like' => $request->like,
@@ -23,10 +25,10 @@ class UserController extends Controller
         if($request->like == 1){
             //chek if had swipe with other user
             $hadSwipe = Swipe::where([
-                'user_id' => $request->user_id, 
-                'user_swipe_id' => $user->id, 
+                'user_id' => $request->user_id,
+                'user_swipe_id' => $user->id,
                 'like' => 1
-            ])->exist();
+            ])->exists();
 
             if($hadSwipe){
                 //create pair
@@ -37,10 +39,10 @@ class UserController extends Controller
         }else{
             //chek if had pair and delete
             Pair::where([
-                'user_id' => [$request->user_id, $user->id], 
+                'user_id' => [$request->user_id, $user->id],
                 'user_swipe_id' => [$request->user_id, $user->id]
             ])->delete();
         }
-        return response()->setStatusCode(200);
+        return response(['message' => 'Pomyślnie dodano'], 200);
     }
 }
